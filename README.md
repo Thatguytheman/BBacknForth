@@ -48,3 +48,18 @@ Value: Adress/Input/Number/Buffer/DlyLeft
 Cond : ==, !=, <, >, <=, >=
 Delay: COND/WAIT Any positive, SWITCHDLY any number.
 
+
+
+# USAGE
+
+Put code in example.txt
+Run interpreter
+
+3 modes: No debug, Debug with music, Debug without music
+
+No debug just runs the code
+Debug with music advances every tick to the beat
+Debug without music advances every tick on enter press
+
+
+
