@@ -1,0 +1,15 @@
+INP = 1
++COPY Input to R0 
+-
++WAIT 3 
+-
++OUT R0 
+-
++COND == 0 R0 1 
+-WAITSWP 
++WAIT 1 
+-SWPOFFSET -3 
++
+-WAITSWP
++WAIT 5
+-SWPOFFSET -5
