@@ -1,6 +1,6 @@
 # BBacknForth
 My custom esolang
-
+```
 Running starts at + command, every action has a delay value, every 8 delay, switch to the - directly after the +.
 If you run out of - operations to do, defaults to NOP
 After 8 delay on -, switch back to +
@@ -47,7 +47,7 @@ Adresses: R0-R3
 Value: Adress/Input/Number/Buffer/DlyLeft
 Cond : ==, !=, <, >, <=, >=
 Delay: COND/WAIT Any positive, SWITCHDLY any number.
-
+```
 
 
 # USAGE
