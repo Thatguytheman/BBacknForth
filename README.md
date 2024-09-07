@@ -40,7 +40,7 @@ when you run out of + instructions, stop program
 +- WAITSWP                              : Any   | Waits until switch instruction set
 +- STOP                                 : 0     | Exits program
 
-Comments start with #
+Comments start with # on a newline!!!
 Blank = NOP
 
 Adresses: R0-R3 
