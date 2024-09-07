@@ -31,6 +31,7 @@ if enableDebugMusic:
 temp = os.listdir(os.path.split(os.path.relpath(fileLocation))[0])
 temp.remove(os.path.split(fileLocation)[1])
 temp.remove(musicLocation)
+temp.remove("README.md")
 
 Program = open(os.path.relpath(os.path.join(os.path.split(fileLocation)[0],temp[0])), "r")
 
