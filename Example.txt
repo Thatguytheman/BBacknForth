@@ -1,4 +1,8 @@
+#Truth machine
+#change input to 1 or 0
+
 INP = 1
+
 +COPY Input to R0 
 -
 +WAIT 3 
