@@ -63,6 +63,40 @@ Debug with music advances every tick to the beat
 Debug without music advances every tick on enter press
 
 # EXAMPLE PROGRAM
+```
+#Hello World
++OUT 72 Char
+-OUT 111 Char
++OUT 101 Char
+-OUT 119 Char
++OUT 108 Char
+-OUT 32 Char
++OUT 108 Char
+-OUT 111 Char
++OUT 114 Char
+-
++OUT 108 Char
+-
++OUT 100 Char
+-
++STOP
+```
 
+```
+#Truth Machine
+INP = 1
++COPY Input to R0 
+-
++WAIT 3 
+-
++OUT R0 
+-
++COND == 1 R0 SKIP
+-WAITSWP 
++STOP
+-SWPOFFSET -4
++WAITSWP
+-
+```
 
 
