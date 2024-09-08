@@ -8,7 +8,7 @@ The plus to Jump back to is the plus after the last cycle
 The exception is if the SWITCHDLY command is run, It offsets the start by the amount of instructions defined by the delay.
 For example:
 cycle ends here
-	    |
+      |
       V
 +-+-+-+-+-+
   | |   | |
@@ -32,6 +32,7 @@ when you run out of + instructions, stop program
 -  PUSH [Value]                         : 3     | Push a value onto the stack
 -  POP                                  : 2     | Pop top element off the stack and save it in Buffer
 +- COND [Cond] [Value] [Value] [Delay]  : Any   | Checks Condition against 2 Values, if false: its delay is 0, otherwize the delay is the delay specified (>0)
++- COND [Cond] [Value] [Value] SKIP     : 0     | Checks Condition against 2 Values, if true: skip next command
 +- OUT [Value]                          : 2     | Ouput the value as a number
 +- OUT [Value] Char                     : 2     | Ouput the value as a ascii character
 +- NOP                                  : 0     | No operation 
@@ -60,6 +61,8 @@ Run interpreter
 No debug just runs the code
 Debug with music advances every tick to the beat
 Debug without music advances every tick on enter press
+
+# EXAMPLE PROGRAM
 
 
 
