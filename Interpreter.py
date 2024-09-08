@@ -9,18 +9,14 @@ enableDebugMusic = False
 if enableDebug:
     enableDebugMusic = (input("Enable Debug Music? Y/N:").upper() == "Y")
 
-if enableDebugMusic:
-    from pygame import mixer
+
 
 
 
 #play music
 musicLocation = "REQUIREDmusic.mp3"
 fileLocation = os.path.realpath(__file__)
-if enableDebugMusic:
-    mixer.init()
-    mixer.music.load(os.path.relpath(os.path.join(os.path.split(fileLocation)[0],musicLocation)))
-    mixer.music.play()
+
 
 
 
@@ -78,6 +74,8 @@ PossibleStarts = ["#", "I", "+", "-", "\n"]
 
 lastSign = "-"
 
+skip = False
+
 for line in Program:
 
     l += 1
@@ -131,11 +129,30 @@ for line in Program:
             raise Exception("Start of line " + str(l) + " is not formatted correctly")
 
 
-
+CustmInp = (input("Custom input? Y/N:").upper() == "Y")
+if CustmInp:
+    Inputs = input("What should the input be? ex: 10,50,d,t\n")
+    Inputs =  Inputs.split(",")
+    Input = []
+    
+    for i in Inputs:
+        if i != " ":
+            i.strip(" ")
+        try:
+            Input.append(int(i))
+        except:
+            Input.append(ord(i))
+if enableDebugMusic:
+    from pygame import mixer
+if enableDebugMusic:
+    mixer.init()
+    mixer.music.load(os.path.relpath(os.path.join(os.path.split(fileLocation)[0],musicLocation)))
+    mixer.music.play()
 
 
 
 def printDbg(HlightLine = (len(TokenProgram) + 1), DlyLeft = 8):
+
     li = 1
     for i in TokenProgram:
         
@@ -155,8 +172,9 @@ def printDbg(HlightLine = (len(TokenProgram) + 1), DlyLeft = 8):
         
         print() 
         li += 1
-    for i in range(3):
-        print()
+    print()
+    print(printStr)
+    print()
     
     
 
@@ -188,14 +206,21 @@ result = False
 
 IsPlus = True
 
+printStr = ""
+
 DlyRemove = 0
 
 def step(LineNum,Dbg = False):
+    global skip
+    global printStr
     global delayLeft
     global DlyRemove
     global SwitchOffset
     LineNum -= 1
     line = TokenProgram[LineNum]
+    if skip:
+        line = ["+","NOP"]
+        skip = False
     match line[1]:
             case "COPY":
                 if line[0] == "-":
@@ -235,7 +260,9 @@ def step(LineNum,Dbg = False):
                 if len(line) == 4:
                     out = chr(out)
                 
-                print(out,end="")
+                printStr += str(out)
+                if not enableDebug:
+                    print(out,end="")
                 DlyRemove = 2
             case "NOP":
                 DlyRemove = 0
@@ -248,13 +275,19 @@ def step(LineNum,Dbg = False):
                 DlyRemove = 1
             case "STOP":
                 if enableDebugMusic: mixer.music.stop()
+                printDbg(LineNum + 1, delayLeft)   
                 input("\nExecution finished, press enter to quit")
                 sys.exit()
             case "COND":
                 result = eval(str(valueToNum(line[3])) + line[2] + str(valueToNum(line[4])))
-                if result:
-                    DlyRemove = valueToNum(line[5])
-                else: DlyRemove = 0
+                if line[5][0] != "S":
+                    if result:
+                        DlyRemove = valueToNum(line[5])
+                    else: DlyRemove = 0
+                else:
+                    if result:
+                        skip = True
+                    DlyRemove = 0
     
     if DlyRemove < 0:
         raise Exception("Dont put a negative number for a wait value!")
@@ -327,18 +360,10 @@ def MainInterpLoop():
             except:
                 if IsPlus:
                     if enableDebugMusic: mixer.music.stop()
-                    
+                    printDbg(lineNum, delayLeft)                    
                     input("\nExecution finished, press enter to quit")
                     sys.exit()
                 else:
                     lineNum += 2
-                    delayLeft = 0
-            
-            
-                    
-MainInterpLoop()        
-        
-        
-        
-    
-    
+                    delayLeft = 0 
+MainInterpLoop()
