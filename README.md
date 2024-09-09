@@ -32,6 +32,8 @@ when you run out of + instructions, stop program
 -  PUSH [Value] [Value]                 : 3     | Push a value into the array at specified index
 -  POP [Value]                          : 2     | Pop element at specified index off the array and save it in Buffer
 +- COND [Cond] [Value] [Value] [Delay]  : Any   | Checks Condition against 2 Values, if false: its delay is 0, otherwize the delay is the delay specified (>0)
++- LBL [Label]                          : 1     | Creates a Label that you can jump back to with the JMP command
++- JMP [Label]                          : 1     | Jumps to Label specified, if the label and the JMP is on the same instruction set (both + or both -)
 +- COND [Cond] [Value] [Value] SKIP     : 0     | Checks Condition against 2 Values, if true: skip next command
 +- OUT [Value]                          : 2     | Ouput the value as a number
 +- OUT [Value] Char                     : 2     | Ouput the value as a ascii character
