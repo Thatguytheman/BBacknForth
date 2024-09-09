@@ -15,10 +15,10 @@ cycle ends here
  -2 -1  1 2
 
 
-only - can read/write to stack
+only - can read/write to array
 only + can write to registers
 both can read buffer, registers and input
-When you POP from stack, the value goes into buffer
+When you POP from array, the value goes into buffer
 
 Input is written at start, seperated by commas. Input is a stack starting with first element of input, whenever input is read, the input is Popped from input.
 when you run out of + instructions, stop program
@@ -29,8 +29,8 @@ when you run out of + instructions, stop program
 +  COPY [Value] to [Adress]             : 2     | Copy a value to a register
 +- ADD [Value] [Value] [Adress]         : 1     | Add 2 numbers and save the result in a register
 +- SUB [Value] [Value] [Adress]         : 1     | Subtracts 2 numbers value1 - value2 and saves the result in a register
--  PUSH [Value]                         : 3     | Push a value onto the stack
--  POP                                  : 2     | Pop top element off the stack and save it in Buffer
+-  PUSH [Value] [Value]                 : 3     | Push a value into the array at specified index
+-  POP [Value]                          : 2     | Pop element at specified index off the array and save it in Buffer
 +- COND [Cond] [Value] [Value] [Delay]  : Any   | Checks Condition against 2 Values, if false: its delay is 0, otherwize the delay is the delay specified (>0)
 +- COND [Cond] [Value] [Value] SKIP     : 0     | Checks Condition against 2 Values, if true: skip next command
 +- OUT [Value]                          : 2     | Ouput the value as a number
@@ -53,13 +53,13 @@ Delay: COND/WAIT Any positive, SWITCHDLY any number.
 
 # USAGE
 
-Put code in example.txt
+Put code in example.txt, 
 Run interpreter
 
 3 modes: No debug, Debug with music, Debug without music
 
-No debug just runs the code
-Debug with music advances every tick to the beat
+No debug just runs the code, 
+Debug with music advances every tick to the beat, 
 Debug without music advances every tick on enter press
 
 # EXAMPLE PROGRAM
