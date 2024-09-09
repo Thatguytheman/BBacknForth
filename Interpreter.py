@@ -27,7 +27,10 @@ fileLocation = os.path.realpath(__file__)
 temp = os.listdir(os.path.split(os.path.relpath(fileLocation))[0])
 temp.remove(os.path.split(fileLocation)[1])
 temp.remove(musicLocation)
-temp.remove("README.md")
+try:
+    temp.remove("README.md")
+except:
+    pass
 
 Program = open(os.path.relpath(os.path.join(os.path.split(fileLocation)[0],temp[0])), "r")
 
@@ -61,14 +64,18 @@ Syntax = [
     "SWPOFFSET",
     "WAITSWP",
     "STOP",
-    "NP"
+    "NP",
+    "JMP",
+    "LBL"
 ]
+
+labels = {}
 
 TokenProgram = []
 
 InpFlag = False
 
-l = 0
+ln = 0
 
 PossibleStarts = ["#", "I", "+", "-", "\n"]
 
@@ -78,7 +85,7 @@ skip = False
 
 for line in Program:
 
-    l += 1
+    ln += 1
     line.strip()
     if line not in ["", "\n"]:
         if line[0].upper() in PossibleStarts:
@@ -91,7 +98,7 @@ for line in Program:
                 
                 if test[0] == "NP":
                     if InpFlag:
-                        raise Exception("You cannot have 2 input statements! Line: " + str(l))
+                        raise Exception("You cannot have 2 input statements! Line: " + str(ln))
                     InpFlag = True
                     
                     tmp = "".join(test[2:])
@@ -108,8 +115,12 @@ for line in Program:
                     
                 
                 if test[0] not in Syntax:
-                    raise Exception("Start of line " + str(l) + " is not correct syntax")
+                    raise Exception("Start of line " + str(ln) + " is not correct syntax")
                     
+                if test[0] == "LBL":
+                    labels[test[1]] = ln - 1
+                    print(labels)
+                
                 test.insert(0,sign)
                 
                 #print(test[1])
@@ -119,14 +130,14 @@ for line in Program:
                 
                 
                 if sign == lastSign:
-                    raise Exception("2 " + sign + "s in a row! Line: " + str(l))
+                    raise Exception("2 " + sign + "s in a row! Line: " + str(ln))
                 lastSign = sign
                 if test[1] != "NP":
                     TokenProgram.append(test)
                 
                 
         else:
-            raise Exception("Start of line " + str(l) + " is not formatted correctly")
+            raise Exception("Start of line " + str(ln) + " is not formatted correctly")
 
 
 CustmInp = (input("Custom input? Y/N:").upper() == "Y")
@@ -149,10 +160,17 @@ if enableDebugMusic:
     mixer.music.load(os.path.relpath(os.path.join(os.path.split(fileLocation)[0],musicLocation)))
     mixer.music.play()
 
-
+lastLine = 0
 
 def printDbg(HlightLine = (len(TokenProgram) + 1), DlyLeft = 8):
-
+    
+    global lastLine
+    
+    JmpFrom = len(TokenProgram) + 1
+    
+    if (HlightLine - lastLine) not in [0,1,2]:
+        JmpFrom = lastLine
+    
     li = 1
     for i in TokenProgram:
         
@@ -160,11 +178,14 @@ def printDbg(HlightLine = (len(TokenProgram) + 1), DlyLeft = 8):
             print(">",end = "")
             print(DlyLeft,end = "")
         else:
-            print("  ",end = "")
-        
-        
-                
-        
+            if li == JmpFrom:
+                if JmpFrom < HlightLine:
+                    print("V ",end = "")
+                else:
+                    print("^ ",end = "")
+            else:
+                print("  ",end = "")
+
         for j in i:
             
             print(j,end = "")
@@ -172,6 +193,9 @@ def printDbg(HlightLine = (len(TokenProgram) + 1), DlyLeft = 8):
         
         print() 
         li += 1
+    
+    lastLine = HlightLine
+    
     print()
     print(printStr)
     print()
@@ -210,12 +234,16 @@ printStr = ""
 
 DlyRemove = 0
 
+lineNum = 0
+
 def step(LineNum,Dbg = False):
+    print(LineNum)
     global skip
     global printStr
     global delayLeft
     global DlyRemove
     global SwitchOffset
+    global lineNum
     LineNum -= 1
     line = TokenProgram[LineNum]
     if skip:
@@ -288,6 +316,26 @@ def step(LineNum,Dbg = False):
                     if result:
                         skip = True
                     DlyRemove = 0
+            case "JMP":
+                
+                try:
+                    JumpTo = labels[line[2]]
+                except:
+                    raise Exception(line[2] + " Is not defined!")
+                
+                print(line[0], TokenProgram[LineNum - 1])
+                
+                if line[0] != TokenProgram[JumpTo - 1][0]:
+                    raise Exception("You can't jump to opposite instruction set!")
+                    
+                    
+                DlyRemove = 1
+                lineNum = JumpTo - 2
+            case "LBL":
+                DlyRemove = 1
+            case _:
+                DlyRemove = 0
+                
     
     if DlyRemove < 0:
         raise Exception("Dont put a negative number for a wait value!")
@@ -314,12 +362,13 @@ def step(LineNum,Dbg = False):
     return
     
         
-        
+    
         
 def MainInterpLoop():
 
         returnLine = 0
         
+        global lineNum
         global IsPlus
         global delayLeft
         global SwitchOffset
