@@ -248,12 +248,12 @@ def step(LineNum,Dbg = False):
             case "PUSH":
                 if line[0] == "+":
                     raise Exception("Only minus can write to Stack!! Line: " + str(LineNum + 1))
-                Stack.append(valueToNum(line[2]))
+                Array.insert(valueToNum(line[2]), valueToNum(line[3]))
                 DlyRemove = 3
             case "POP":
                 if line[0] == "+":
                     raise Exception("Only minus can Read Stack!! Line: " + str(LineNum + 1))
-                Buffer = Stack.pop()
+                Buffer = Stack.pop(valueToNum(line[2]))
                 DlyRemove = 2
             case "OUT":
                 out = valueToNum(line[2])
@@ -365,5 +365,10 @@ def MainInterpLoop():
                     sys.exit()
                 else:
                     lineNum += 2
-                    delayLeft = 0 
-MainInterpLoop()
+                    delayLeft = 0                    
+MainInterpLoop()        
+        
+        
+        
+    
+    
