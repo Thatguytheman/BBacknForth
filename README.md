@@ -68,20 +68,21 @@ Debug without music advances every tick on enter press
 ```
 #Hello World
 +OUT 72 Char
--OUT 111 Char
+-
 +OUT 101 Char
 -OUT 119 Char
 +OUT 108 Char
 -OUT 32 Char
 +OUT 108 Char
 -OUT 111 Char
++OUT 111 Char
+-
 +OUT 114 Char
 -
 +OUT 108 Char
 -
 +OUT 100 Char
--
-+STOP
+-STOP
 ```
 
 ```
