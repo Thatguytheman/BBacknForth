@@ -47,6 +47,8 @@ Register = [0,0,0,0]
 
 Stack = []
 
+signTog = False
+
 Syntax = [
     "ADD",
     "SUB",
@@ -91,7 +93,7 @@ for line in Program:
                 sign = test[0][0]
                 test[0] = test[0][1:]
                 
-                #print(test)
+
                 
                 if test[0] == "NP":
                     if InpFlag:
@@ -116,16 +118,24 @@ for line in Program:
                     
                 if test[0] == "LBL":
                     labels[test[1]] = ln - 1
-                    print(labels)
+
                 
                 test.insert(0,sign)
                 
-                #print(test[1])
+
                 
                 if test[1] == "":
                     test[1] = "NOP"
                 
-                
+                if not signTog:
+                    if sign == "-" and test[1] not in ["NOP","WAITSWP"]:
+                        raise Exception("first - instruction canlt be anything except "" or WAITSWP")
+                    elif test[1] != "WAITSWP" and sign == "-":
+                        test[1] = "WAITSWP"
+                    if sign == "-":
+                        signTog = True
+                    
+                    
                 if sign == lastSign:
                     raise Exception("2 " + sign + "s in a row! Line: " + str(ln))
                 lastSign = sign
@@ -234,7 +244,6 @@ DlyRemove = 0
 lineNum = 0
 
 def step(LineNum,Dbg = False):
-    print(LineNum)
     global skip
     global printStr
     global delayLeft
@@ -320,14 +329,14 @@ def step(LineNum,Dbg = False):
                 except:
                     raise Exception(line[2] + " Is not defined!")
                 
-                print(line[0], TokenProgram[LineNum - 1])
+
                 
-                if line[0] != TokenProgram[JumpTo - 1][0]:
+                if line[0] != TokenProgram[JumpTo][0]:
                     raise Exception("You can't jump to opposite instruction set!")
                     
                     
                 DlyRemove = 1
-                lineNum = JumpTo - 2
+                lineNum = JumpTo - 3
             case "LBL":
                 DlyRemove = 1
             case _:
@@ -374,18 +383,19 @@ def MainInterpLoop():
         
         while True:
             
-            step(lineNum, enableDebug)
-            
 
+            
+            step(lineNum, enableDebug)
             
             
             if delayLeft == 0:
                 
                 if IsPlus:
+
                     returnLine = lineNum
                     lineNum += 3 + SwitchOffset
                     SwitchOffset = 0
-                    
+
                 else:
                     lineNum = returnLine + SwitchOffset
                     SwitchOffset = 0
@@ -398,23 +408,22 @@ def MainInterpLoop():
             else:
                 lineskip = -2
                 
-            
             lineNum += lineskip
+            
+            if lineNum < 0:
+                lineNum = 2
+            
+
             
             try:
                 TokenProgram[lineNum - 1]
+
             except:
-                if IsPlus:
-                    if enableDebugMusic: mixer.music.stop()
-                    printDbg(lineNum, delayLeft)                    
-                    input("\nExecution finished, press enter to quit")
-                    sys.exit()
-                else:
-                    lineNum += 2
-                    delayLeft = 0                    
+                if enableDebugMusic: mixer.music.stop()
+                printDbg(lineNum, delayLeft)                    
+                input("\nExecution finished, press enter to quit")
+                sys.exit()
 MainInterpLoop()        
         
         
         
-    
-    
