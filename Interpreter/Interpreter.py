@@ -126,15 +126,6 @@ for line in Program:
                 
                 if test[1] == "":
                     test[1] = "NOP"
-                
-                if not signTog:
-                    if sign == "-" and test[1] not in ["NOP","WAITSWP"]:
-                        raise Exception("first - instruction canlt be anything except "" or WAITSWP")
-                    elif test[1] != "WAITSWP" and sign == "-":
-                        test[1] = "WAITSWP"
-                    if sign == "-":
-                        signTog = True
-                    
                     
                 if sign == lastSign:
                     raise Exception("2 " + sign + "s in a row! Line: " + str(ln))
@@ -417,13 +408,10 @@ def MainInterpLoop():
             
             try:
                 TokenProgram[lineNum - 1]
-
+                TokenProgram[lineNum - 2]
             except:
                 if enableDebugMusic: mixer.music.stop()
                 printDbg(lineNum, delayLeft)                    
                 input("\nExecution finished, press enter to quit")
                 sys.exit()
 MainInterpLoop()        
-        
-        
-        

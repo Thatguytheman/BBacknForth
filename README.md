@@ -2,7 +2,6 @@
 My custom esolang
 ```
 Running starts at + command, every action has a delay value, every 8 delay, switch to the - directly after the +.
-If you run out of - operations to do, defaults to NOP
 After 8 delay on -, switch back to +
 The plus to Jump back to is the plus after the last cycle
 The exception is if the SWITCHDLY command is run, It offsets the start by the amount of instructions defined by the delay.
@@ -21,7 +20,7 @@ both can read buffer, registers and input
 When you POP from array, the value goes into buffer
 
 Input is written at start, seperated by commas. Input is a stack starting with first element of input, whenever input is read, the input is Popped from input.
-when you run out of + instructions, stop program
+when you run out of instructions, stop program
 
 
   |Syntax                               | Delay | Usage
@@ -44,6 +43,7 @@ when you run out of + instructions, stop program
 +- STOP                                 : 0     | Exits program
 
 Comments start with # on a newline!!!
+No inline comments!
 Blank = NOP
 
 Adresses: R0-R3 
@@ -68,21 +68,20 @@ Debug without music advances every tick on enter press
 ```
 #Hello World
 +OUT 72 Char
--
+-OUT 111 Char
 +OUT 101 Char
 -OUT 119 Char
 +OUT 108 Char
 -OUT 32 Char
 +OUT 108 Char
 -OUT 111 Char
-+OUT 111 Char
--
 +OUT 114 Char
 -
 +OUT 108 Char
 -
 +OUT 100 Char
--STOP
+-
++STOP
 ```
 
 ```
